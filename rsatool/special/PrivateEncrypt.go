@@ -1,15 +1,15 @@
-package rsatool
+package special
 
 import (
-	"crypto/rand"
+	"crypto"
 	"crypto/rsa"
 )
 
-// Encrypt .. 公钥加密
-func Encrypt(publicKey *rsa.PublicKey, original []byte) (ciphertext []byte, err error) {
+// PrivateEncrypt .. 私钥加密
+func PrivateEncrypt(privateKey *rsa.PrivateKey, original []byte) (ciphertext []byte, err error) {
 	var (
 		total = len(original)
-		size  = publicKey.Size() - 11
+		size  = privateKey.Size() - 11
 		start = 0
 		end   = size
 	)
@@ -23,7 +23,7 @@ func Encrypt(publicKey *rsa.PublicKey, original []byte) (ciphertext []byte, err 
 		sub := original[start:end]
 
 		// 加密
-		subCiphertext, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, sub)
+		subCiphertext, err := rsa.SignPKCS1v15(nil, privateKey, crypto.Hash(0), sub)
 		if err != nil {
 			return nil, err
 		}

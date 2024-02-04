@@ -1,15 +1,14 @@
-package rsatool
+package special
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
 )
 
-// Decrypt .. 私钥解密
-func Decrypt(privateKey *rsa.PrivateKey, ciphertext []byte) (original []byte, err error) {
+// PublicDecrypt .. 公钥解密
+func PublicDecrypt(publicKey *rsa.PublicKey, ciphertext []byte) (original []byte, err error) {
 	var (
 		total = len(ciphertext)
-		size  = privateKey.Size()
+		size  = publicKey.Size()
 		start = 0
 		end   = size
 	)
@@ -23,10 +22,7 @@ func Decrypt(privateKey *rsa.PrivateKey, ciphertext []byte) (original []byte, er
 		sub := ciphertext[start:end]
 
 		// 解密
-		subOriginal, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, sub)
-		if err != nil {
-			return nil, err
-		}
+		subOriginal := RSA_public_decrypt(publicKey, sub)
 		// 拼接解密结果
 		original = append(original, subOriginal...)
 
