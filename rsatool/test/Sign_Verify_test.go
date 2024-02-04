@@ -8,15 +8,19 @@ import (
 	"github.com/5-say/go-tool/rsatool"
 )
 
-func Test_Sign(t *testing.T) {
+func Test_Sign_Verify(t *testing.T) {
 	var (
 		privateKey, _ = rsatool.GenerateKey(128)
 		original      = []byte(`demo`)
 	)
-	signature, err := rsatool.Sign(privateKey, original, crypto.SHA1)
+	signature, err := rsatool.Sign(privateKey, original, crypto.SHA512)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(base64.StdEncoding.EncodeToString(signature))
-	t.Fail()
+
+	err = rsatool.Verify(&privateKey.PublicKey, original, signature, crypto.SHA512)
+	if err != nil {
+		t.Fatal(err)
+	}
 }

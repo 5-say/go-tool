@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// SignWithSha1 .. Sha1 私钥签名
+// 私钥签名
 func Sign(privateKey *rsa.PrivateKey, original []byte, hashFunc crypto.Hash) (signature []byte, err error) {
 	var h hash.Hash
 	switch hashFunc {
