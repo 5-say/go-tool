@@ -4,12 +4,16 @@ import (
 	"crypto/rand"
 )
 
-// GenerateKey .. 生成密钥
+// 生成密钥
 //
 //	blockSize BlockSize
 //
-// 16, 24, or 32， AES-128, AES-192, or AES-256.
-func GenerateKey(blockSize int) (key []byte, err error) {
+// ex:
+//
+//	aestool.GenerateKey(aestool.AES_128)
+//	aestool.GenerateKey(aestool.AES_192)
+//	aestool.GenerateKey(aestool.AES_256)
+func GenerateKey(blockSize BlockSize) (key []byte, err error) {
 	key = make([]byte, blockSize)
 	_, err = rand.Read(key)
 	return

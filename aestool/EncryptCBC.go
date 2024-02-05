@@ -8,10 +8,17 @@ import (
 	"io"
 )
 
-// EncryptCBC .. 加密
-func EncryptCBC(keyBytes, originalBytes []byte) (ciphertextBytes []byte, err error) {
+// 以 CBC模式 进行加密
+//
+//	key      []byte
+//	original []byte
+//
+// ex:
+//
+//	aestool.EncryptCBC(key, original)
+func EncryptCBC(key, original []byte) (ciphertext []byte, err error) {
 	// 创建一个 cipher.Block 接口对象
-	block, err := aes.NewCipher(keyBytes)
+	block, err := aes.NewCipher(key)
 	if err != nil {
 		return
 	}
@@ -24,18 +31,18 @@ func EncryptCBC(keyBytes, originalBytes []byte) (ciphertextBytes []byte, err err
 	}
 
 	// 数据填充
-	paddingSize := block.BlockSize() - len(originalBytes)%block.BlockSize()
+	paddingSize := block.BlockSize() - len(original)%block.BlockSize()
 	paddingBytes := bytes.Repeat([]byte{byte(paddingSize)}, paddingSize)
-	originalBytes = append(iv, originalBytes...)
-	originalBytes = append(originalBytes, paddingBytes...)
+	original = append(iv, original...)
+	original = append(original, paddingBytes...)
 
 	// 初始化密文容器
-	ciphertextBytes = make([]byte, len(originalBytes))
+	ciphertext = make([]byte, len(original))
 
 	// 实例化一个块模式，该模式使用给定的块以密码块链接模式进行加密。IV的长度必须与块的块大小相同。
 	mode := cipher.NewCBCEncrypter(block, iv)
 	// 开始加密
-	mode.CryptBlocks(ciphertextBytes, originalBytes) // 注意：这里不返回加密后的密文，而是直接将密文存储在 ciphertextBytes 中，因为CBC模式是块加密，不能简单地拼接所有块来得到最终的密文。
+	mode.CryptBlocks(ciphertext, original) // 注意：这里不返回加密后的密文，而是直接将密文存储在 ciphertext 中，因为CBC模式是块加密，不能简单地拼接所有块来得到最终的密文。
 
 	return
 }
