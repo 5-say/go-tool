@@ -139,11 +139,11 @@ func (s *SingletonMode) refreshToken(group string, token *model.JwtxToken, now t
 			}
 
 			// 构造 token 字符串（过期时间不变，签发时间顺延）
-			newToken, err = tool.GenerateTokenES384(s.PrivateKey[group], jwt.MapClaims{
+			newToken, err = tool.GenerateToken(s.PrivateKey[group], jwt.MapClaims{
 				"iat": now.Unix(),     // 签发时间
 				"exp": expTime.Unix(), // 过期时间
 				"tid": token.ID,       // jwt token ID
-			})
+			}, tool.P_384)
 			if err != nil {
 				return "", err.Error(), errors.New("token refresh fail")
 			}

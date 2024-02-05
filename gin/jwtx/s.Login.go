@@ -57,11 +57,11 @@ func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal s
 	}
 
 	// 构造 token 字符串
-	tokenStr, err := tool.GenerateTokenES384(privateKey, jwt.MapClaims{
+	tokenStr, err := tool.GenerateToken(privateKey, jwt.MapClaims{
 		"iat": now.Unix(),     // 签发时间
 		"exp": expTime.Unix(), // 过期时间
 		"tid": token.ID,       // jwt token ID
-	})
+	}, tool.P_384)
 	if err != nil {
 		return err.Error(), errors.New("token refresh fail")
 	}
