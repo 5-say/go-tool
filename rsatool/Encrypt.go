@@ -5,7 +5,14 @@ import (
 	"crypto/rsa"
 )
 
-// Encrypt .. 公钥加密
+// 公钥加密
+//
+//	publicKey *rsa.PublicKey
+//	original  []byte
+//
+// ex:
+//
+//	rsatool.Encrypt(publicKey, original)
 func Encrypt(publicKey *rsa.PublicKey, original []byte) (ciphertext []byte, err error) {
 	var (
 		total = len(original)

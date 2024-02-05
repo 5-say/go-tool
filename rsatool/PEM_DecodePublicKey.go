@@ -7,6 +7,13 @@ import (
 	"errors"
 )
 
+// 解码 PEM 格式 公钥
+//
+//	pemPublicKey []byte
+//
+// ex:
+//
+//	rsatool.PEM_DecodePublicKey(pemPublicKey)
 func PEM_DecodePublicKey(pemPublicKey []byte) (*rsa.PublicKey, error) {
 	// 解析 PEM
 	block, _ := pem.Decode(pemPublicKey)

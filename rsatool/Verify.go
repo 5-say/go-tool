@@ -17,6 +17,15 @@ import (
 // 对其中一个切片进行修改不会影响另一个切片。
 
 // 公钥验签
+//
+//	publicKey *rsa.PublicKey
+//	original  []byte
+//	signature []byte
+//	hashFunc  crypto.Hash
+//
+// ex:
+//
+//	rsatool.Verify(publicKey, original, signature, crypto.SHA256)
 func Verify(publicKey *rsa.PublicKey, original, signature []byte, hashFunc crypto.Hash) error {
 	switch hashFunc {
 	case crypto.MD5:

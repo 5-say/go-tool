@@ -15,6 +15,14 @@ import (
 )
 
 // 私钥签名
+//
+//	privateKey *rsa.PrivateKey
+//	original   []byte
+//	hashFunc   crypto.Hash
+//
+// ex:
+//
+//	rsatool.Sign(privateKey, original, crypto.SHA256)
 func Sign(privateKey *rsa.PrivateKey, original []byte, hashFunc crypto.Hash) (signature []byte, err error) {
 	var h hash.Hash
 	switch hashFunc {

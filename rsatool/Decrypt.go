@@ -5,7 +5,14 @@ import (
 	"crypto/rsa"
 )
 
-// Decrypt .. 私钥解密
+// 私钥解密
+//
+//	privateKey *rsa.PrivateKey
+//	ciphertext []byte
+//
+// ex:
+//
+//	rsatool.Decrypt(privateKey, ciphertext)
 func Decrypt(privateKey *rsa.PrivateKey, ciphertext []byte) (original []byte, err error) {
 	var (
 		total = len(ciphertext)
