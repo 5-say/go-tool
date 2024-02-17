@@ -3,13 +3,13 @@ package jwtx
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/model"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/query"
 	"github.com/5-say/go-tool/gin/jwtx/tool"
+	"github.com/5-say/go-tool/logx"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -28,7 +28,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		// 解析 token
 		claims, err := tool.ParseToken(c.GetHeader("Authorization"), &s.PrivateKey[requestGroup].PublicKey)
 		if err != nil {
-			fmt.Println(err)
+			logx.Error().Err(err).Msg("解析 token 失败")
 			c.AbortWithStatus(401)
 			return
 		}
@@ -43,7 +43,6 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 
 		// token 过期时间校验
 		if exp.Unix() < now.Unix() {
-			fmt.Println("token has expired")
 			c.AbortWithStatus(401)
 			return
 		}
@@ -51,8 +50,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		// 数据库中查找 token
 		token, log, err := s.getDBToken(requestGroup, tid)
 		if err != nil {
-			fmt.Println(log)
-			fmt.Println(err)
+			logx.Error().Err(err).Msg(log)
 			c.AbortWithStatus(401)
 			return
 		}
@@ -60,8 +58,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		// 校验数据库 token 信息
 		log, err = s.checkDBToken(requestGroup, token, now, c.ClientIP())
 		if err != nil {
-			fmt.Println(log)
-			fmt.Println(err)
+			logx.Error().Err(err).Msg(log)
 			c.AbortWithStatus(401)
 			return
 		}
@@ -69,8 +66,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		// 刷新 token
 		newToken, log, err := s.refreshToken(requestGroup, token, now, iat)
 		if err != nil {
-			fmt.Println(log)
-			fmt.Println(err)
+			logx.Error().Err(err).Msg(log)
 			c.AbortWithStatus(401)
 			return
 		}
