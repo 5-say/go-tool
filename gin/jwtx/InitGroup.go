@@ -2,11 +2,14 @@ package jwtx
 
 import (
 	"crypto/ecdsa"
+	"time"
 
 	"github.com/5-say/go-tool/gin/jwtx/tool"
+	"github.com/5-say/go-tool/gorm/mysqlx"
+	"github.com/5-say/go-tool/logx"
 	"github.com/jinzhu/configor"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // 初始化分组（支持多次调用）
@@ -40,11 +43,12 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
 	s.Config[group] = config
 
 	// 初始化分组数据库连接
-	gormdb, err := gorm.Open(mysql.Open(config.MysqlDSN))
-	if err != nil {
-		panic(err)
-	}
-	s.DB[group] = gormdb
+	s.DB[group] = mysqlx.New(config.MysqlDSN, logx.GormLogger(logger.Config{
+		SlowThreshold:             200 * time.Millisecond,
+		IgnoreRecordNotFoundError: false,
+		ParameterizedQueries:      false,
+		LogLevel:                  logger.Warn,
+	}))
 
 	// 初始化分组私钥
 	privateKey, err := tool.GetPrivateKey(privateKeyPath)

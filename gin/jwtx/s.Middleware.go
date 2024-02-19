@@ -90,11 +90,11 @@ func (s *SingletonMode) getDBToken(group string, tid uint64) (token *model.JwtxT
 	// 查找 token
 	q := query.Use(s.DB[group])
 	o := q.JwtxToken
-	tokens, err := o.WithContext(context.Background()).Where(o.ID.Eq(tid)).Limit(1).Find()
-	if len(tokens) != 1 {
+	token, err = o.WithContext(context.Background()).Where(o.ID.Eq(tid)).First()
+	if err != nil {
 		return nil, "数据库 token id [" + strconv.Itoa(int(tid)) + "] 不存在 [sqlfail: " + err.Error() + "]", errors.New("token not found")
 	}
-	return tokens[0], "", nil
+	return token, "", nil
 }
 
 // 校验数据库 token 信息

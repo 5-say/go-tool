@@ -1,10 +1,21 @@
 package logx
 
 import (
-	"time"
+	"os"
 
 	"github.com/rs/zerolog"
 )
+
+var (
+	debugEvent *zerolog.Event
+)
+
+func InitWriter_Debug(filePath string, debugWriterConfig NewWriterConfig) {
+	w := NewWriter(filePath+".debug.log", debugWriterConfig)
+	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+	// 存储单例
+	debugEvent = l.Debug()
+}
 
 // Debug
 //
@@ -13,6 +24,9 @@ import (
 //	logx.Debug().Msg("")
 //	logx.Debug().Any("data", data).Send()
 func Debug() *zerolog.Event {
-	timeStr := time.Now().UTC().Add(8 * time.Hour).Format("2006-01-02 15:04:05")
-	return DebugLogger.Log().Str("time", timeStr).Caller(1)
+	if debugEvent != nil {
+		return debugEvent
+	}
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+	return l.Debug()
 }
