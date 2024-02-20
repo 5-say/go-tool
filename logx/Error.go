@@ -8,7 +8,7 @@ import (
 
 // 单例
 var (
-	errorEvent *zerolog.Event
+	errorLogger *zerolog.Logger
 )
 
 // InitWriter_Error
@@ -20,7 +20,7 @@ func InitWriter_Error(filePath string, errorWriterConfig NewWriterConfig) {
 	w := NewWriter(filePath+".error.log", errorWriterConfig)
 	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
 	// 存储单例
-	errorEvent = l.Error()
+	errorLogger = &l
 }
 
 // Error
@@ -30,8 +30,8 @@ func InitWriter_Error(filePath string, errorWriterConfig NewWriterConfig) {
 //	logx.Error().Msg("")
 //	logx.Error().Any("data", data).Send()
 func Error() *zerolog.Event {
-	if errorEvent != nil {
-		return errorEvent
+	if errorLogger != nil {
+		return errorLogger.Error()
 	}
 	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
 	return l.Error()

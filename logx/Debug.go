@@ -8,7 +8,7 @@ import (
 
 // 单例
 var (
-	debugEvent *zerolog.Event
+	debugLogger *zerolog.Logger
 )
 
 // InitWriter_Debug
@@ -20,7 +20,7 @@ func InitWriter_Debug(filePath string, debugWriterConfig NewWriterConfig) {
 	w := NewWriter(filePath+".debug.log", debugWriterConfig)
 	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
 	// 存储单例
-	debugEvent = l.Debug()
+	debugLogger = &l
 }
 
 // Debug
@@ -30,8 +30,8 @@ func InitWriter_Debug(filePath string, debugWriterConfig NewWriterConfig) {
 //	logx.Debug().Msg("")
 //	logx.Debug().Any("data", data).Send()
 func Debug() *zerolog.Event {
-	if debugEvent != nil {
-		return debugEvent
+	if debugLogger != nil {
+		return debugLogger.Debug()
 	}
 	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
 	return l.Debug()
