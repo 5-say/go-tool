@@ -6,10 +6,16 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// 单例
 var (
 	infoEvent *zerolog.Event
 )
 
+// InitWriter_Info
+//
+// ex:
+//
+//	logx.InitWriter_Info(filePath, logx.DefaultNewWriterConfig(1, 10, 10))
 func InitWriter_Info(filePath string, infoWriterConfig NewWriterConfig) {
 	w := NewWriter(filePath+".info.log", infoWriterConfig)
 	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()

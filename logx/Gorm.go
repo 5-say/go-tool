@@ -12,6 +12,11 @@ var (
 	gormWriter logger.Writer
 )
 
+// InitWriter_Gorm
+//
+// ex:
+//
+//	logx.InitWriter_Gorm(filePath, logx.DefaultNewWriterConfig(1, 10, 10))
 func InitWriter_Gorm(filePath string, gormWriterConfig NewWriterConfig) {
 	w := NewWriter(filePath+".gorm.log", gormWriterConfig)
 	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Logger()
