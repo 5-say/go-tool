@@ -6,11 +6,18 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/jinzhu/configor v1.2.2
+	github.com/rs/zerolog v1.32.0
 	golang.org/x/crypto v0.15.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/gen v0.3.25
 	gorm.io/gorm v1.25.6
 	gorm.io/plugin/dbresolver v1.5.0
+)
+
+require (
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
