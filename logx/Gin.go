@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/5-say/go-tool/logx/tool"
 	"github.com/rs/zerolog"
 )
 
@@ -12,14 +13,13 @@ var (
 	ginWriter io.Writer
 )
 
-// InitWriter_Gin
+// InitGinWriter
 //
 // ex:
 //
-//	logx.InitWriter_Gin(filePath, logx.DefaultNewWriterConfig(1, 10, 10))
-func InitWriter_Gin(filePath string, ginWriterConfig NewWriterConfig) {
-	w := NewWriter(filePath+".gin.log", ginWriterConfig)
-	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+//	logx.InitGinWriter(logx.DefaultWriter("gin.log", true))
+func InitGinWriter(writer io.Writer) {
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
 	// 存储单例
 	ginWriter = l
 }
@@ -28,14 +28,12 @@ func InitWriter_Gin(filePath string, ginWriterConfig NewWriterConfig) {
 //
 // ex:
 //
-//	if !isTestMode {
-//		gin.DefaultWriter = logx.GinWriter()
-//		gin.DefaultErrorWriter = logx.GinWriter()
-//	}
+//	gin.DefaultWriter = logx.GinWriter()
+//	gin.DefaultErrorWriter = logx.GinWriter()
 //	r := gin.Default()
 func GinWriter() io.Writer {
 	if ginWriter != nil {
 		return ginWriter
 	}
-	return zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+	return zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
 }

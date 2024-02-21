@@ -1,56 +1,39 @@
 package logx
 
 import (
+	"io"
 	"time"
 
-	"github.com/natefinch/lumberjack"
+	"github.com/5-say/go-tool/logx/tool"
 	"github.com/rs/zerolog/diode"
 )
 
-// NewWriter
-//
-//	fileName string               日志文件名
-//	config   logx.NewWriterConfig 文件日志配置
-//
-// ex:
-//
-//	logx.NewWriter("demo.log", logx.)
-func NewWriter(fileName string, config NewWriterConfig) diode.Writer {
-	var c = config
-
-	// 日志拆分
-	rollingWriter := &lumberjack.Logger{
-		Filename:   fileName,
-		MaxSize:    c.MaxMegabytes,
-		MaxAge:     c.MaxDays,
-		MaxBackups: c.MaxBackups,
-		Compress:   c.Compress,
-	}
-
-	// 线程安全、无锁、无阻塞
-	return diode.NewWriter(rollingWriter, c.DiodeBufferSize, c.DiodePollInterval, c.DiodeAlerter)
+// WriterConfig ..
+type WriterConfig struct {
+	Rolling WriterRollingConfig
+	Async   *WriterAsyncConfig
 }
 
-// NewWriterConfig ..
-type NewWriterConfig struct {
-	MaxMegabytes      int           // 单文件最大容量（兆字节）
-	MaxDays           int           // 最大存储天数
-	MaxBackups        int           // 最大备份文件数量
-	Compress          bool          // 备份文件是否压缩
-	DiodeBufferSize   int           // diode 缓冲区大小
-	DiodePollInterval time.Duration // diode 轮询时间间隔
-	DiodeAlerter      diode.Alerter // diode 告警函数
+// 滚动写入配置
+type WriterRollingConfig struct {
+	MaxMegabytes int  // 单文件最大存储容量（兆字节）
+	MaxDays      int  // 最大存储天数
+	MaxBackups   int  // 最大备份文件数量
+	Compress     bool // 备份文件是否压缩
 }
 
-// DefaultNewWriterConfig ..
-func DefaultNewWriterConfig(maxMegabytes, maxDays, maxBackups int) NewWriterConfig {
-	return NewWriterConfig{
-		MaxMegabytes:      maxMegabytes,
-		MaxDays:           maxDays,
-		MaxBackups:        maxBackups,
-		Compress:          false,
-		DiodeBufferSize:   1000,
-		DiodePollInterval: 0,
-		DiodeAlerter:      nil,
+// 异步写入配置
+type WriterAsyncConfig struct {
+	BufferSize   int           // 生产者缓冲区大小
+	PollInterval time.Duration // 消费者轮询间隔
+	Alerter      diode.Alerter // 丢弃告警函数
+}
+
+// 实例化日志写入器，支持 滚动 与 异步
+func NewWriter(fileName string, c WriterConfig) io.Writer {
+	var w = tool.FileRollingWriter(fileName, c.Rolling.MaxBackups, c.Rolling.MaxDays, c.Rolling.MaxMegabytes, c.Rolling.Compress)
+	if c.Async != nil {
+		return tool.WrapAsyncWriter(w, c.Async.BufferSize, c.Async.PollInterval, c.Async.Alerter)
 	}
+	return w
 }

@@ -1,8 +1,10 @@
 package logx
 
 import (
+	"io"
 	"os"
 
+	"github.com/5-say/go-tool/logx/tool"
 	"github.com/rs/zerolog"
 )
 
@@ -11,14 +13,13 @@ var (
 	debugLogger *zerolog.Logger
 )
 
-// InitWriter_Debug
+// InitDebugWriter
 //
 // ex:
 //
-//	logx.InitWriter_Debug(filePath, logx.DefaultNewWriterConfig(1, 10, 10))
-func InitWriter_Debug(filePath string, debugWriterConfig NewWriterConfig) {
-	w := NewWriter(filePath+".debug.log", debugWriterConfig)
-	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+//	logx.InitDebugWriter(logx.DefaultWriter("debug.log", true))
+func InitDebugWriter(writer io.Writer) {
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
 	// 存储单例
 	debugLogger = &l
 }
@@ -33,6 +34,6 @@ func Debug() *zerolog.Event {
 	if debugLogger != nil {
 		return debugLogger.Debug()
 	}
-	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
 	return l.Debug()
 }

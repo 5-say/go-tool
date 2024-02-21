@@ -1,8 +1,10 @@
 package logx
 
 import (
+	"io"
 	"os"
 
+	"github.com/5-say/go-tool/logx/tool"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm/logger"
 )
@@ -12,14 +14,13 @@ var (
 	gormWriter logger.Writer
 )
 
-// InitWriter_Gorm
+// InitGormWriter
 //
 // ex:
 //
-//	logx.InitWriter_Gorm(filePath, logx.DefaultNewWriterConfig(1, 10, 10))
-func InitWriter_Gorm(filePath string, gormWriterConfig NewWriterConfig) {
-	w := NewWriter(filePath+".gorm.log", gormWriterConfig)
-	l := zerolog.New(zerolog.ConsoleWriter{Out: w, NoColor: true, FormatTimestamp: FormatTimestamp}).With().Timestamp().Logger()
+//	logx.InitGormWriter(logx.DefaultWriter("gorm.log", true))
+func InitGormWriter(writer io.Writer) {
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Logger()
 	// 存储单例
 	gormWriter = &l
 }
@@ -39,7 +40,7 @@ func GormLogger(config logger.Config) logger.Interface {
 		config.Colorful = false
 		return logger.New(gormWriter, config)
 	}
-	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: FormatTimestamp}).With().Timestamp().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Logger()
 	config.Colorful = true
 	return logger.New(&l, config)
 }
