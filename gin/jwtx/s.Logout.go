@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/query"
+	"github.com/5-say/go-tool/logx"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +19,7 @@ import (
 //
 //	jwtx.Singleton.Logout(c, "admin", "pc", 1)
 //	jwtx.Singleton.Logout(c, "admin", "all", 1)
-func (s *SingletonMode) Logout(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (log string, err error) {
+func (s *SingletonMode) Logout(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
 	// 获取分组配置
 	var (
 		q      = query.Use(s.DB[loginGroup])
@@ -31,7 +32,8 @@ func (s *SingletonMode) Logout(c *gin.Context, loginGroup string, loginTerminal 
 			q.JwtxToken.AccountID.Eq(accountID),
 			q.JwtxToken.LoginGroup.Eq(loginGroup),
 		).Delete(); err != nil {
-			return "强制单端登录，清除旧 token 失败 [sqlfail: " + err.Error() + "]", errors.New("clear token fail")
+			logx.Error().Msg("强制单端登录，清除旧 token 失败 [sqlfail: " + err.Error() + "]")
+			return errors.New("clear token fail")
 		}
 
 	} else { // 多端登录
@@ -41,7 +43,8 @@ func (s *SingletonMode) Logout(c *gin.Context, loginGroup string, loginTerminal 
 			q.JwtxToken.LoginGroup.Eq(loginGroup),
 			q.JwtxToken.LoginTerminal.Eq(loginTerminal),
 		).Delete(); err != nil {
-			return "多端登录，清除旧 token 失败 [sqlfail: " + err.Error() + "]", errors.New("clear token fail")
+			logx.Error().Msg("多端登录，清除旧 token 失败 [sqlfail: " + err.Error() + "]")
+			return errors.New("clear token fail")
 		}
 	}
 

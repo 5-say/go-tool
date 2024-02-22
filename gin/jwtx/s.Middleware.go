@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/5-say/go-tool/gin/handlerx"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/model"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/query"
 	"github.com/5-say/go-tool/gin/jwtx/tool"
@@ -13,6 +14,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
+
+// MiddlewareHandlerFunc ..
+var MiddlewareHandlerFunc = func(c *gin.Context) {
+	handlerx.Response{}.Error(401)
+}
 
 // jwtx token 中间件（token 解析、校验、刷新） ..
 //
@@ -29,7 +35,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		claims, err := tool.ParseToken(c.GetHeader("Authorization"), &s.PrivateKey[requestGroup].PublicKey)
 		if err != nil {
 			logx.Error().Err(err).Msg("解析 token 失败")
-			c.AbortWithStatus(401)
+			MiddlewareHandlerFunc(c)
 			return
 		}
 
@@ -43,7 +49,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 
 		// token 过期时间校验
 		if exp.Unix() < now.Unix() {
-			c.AbortWithStatus(401)
+			MiddlewareHandlerFunc(c)
 			return
 		}
 
@@ -51,7 +57,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		token, log, err := s.getDBToken(requestGroup, tid)
 		if err != nil {
 			logx.Error().Err(err).Msg(log)
-			c.AbortWithStatus(401)
+			MiddlewareHandlerFunc(c)
 			return
 		}
 
@@ -59,7 +65,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		log, err = s.checkDBToken(requestGroup, token, now, c.ClientIP())
 		if err != nil {
 			logx.Error().Err(err).Msg(log)
-			c.AbortWithStatus(401)
+			MiddlewareHandlerFunc(c)
 			return
 		}
 
@@ -67,7 +73,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		newToken, log, err := s.refreshToken(requestGroup, token, now, iat)
 		if err != nil {
 			logx.Error().Err(err).Msg(log)
-			c.AbortWithStatus(401)
+			MiddlewareHandlerFunc(c)
 			return
 		}
 

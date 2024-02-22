@@ -22,7 +22,7 @@ import (
 //
 //	jwtx.Singleton.Login(c, "admin", "pc", 1)
 //	jwtx.Singleton.Login(c, "admin", "mobile", 1)
-func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (log string, err error) {
+func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
 	// 获取分组配置
 	var (
 		config     = s.Config[loginGroup]
@@ -31,7 +31,7 @@ func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal s
 	)
 
 	// 清除旧 token
-	log, err = s.Logout(c, loginGroup, loginTerminal, accountID)
+	err = s.Logout(c, loginGroup, loginTerminal, accountID)
 	if err != nil {
 		return
 	}
@@ -52,8 +52,8 @@ func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal s
 		FinalRefreshAt: now,
 		ExpirationAt:   expTime,
 	}
-	if err := q.JwtxToken.WithContext(c).Create(&token); err != nil {
-		return err.Error(), errors.New("create token fail")
+	if q.JwtxToken.WithContext(c).Create(&token) != nil {
+		return errors.New("create token fail")
 	}
 
 	// 构造 token 字符串
@@ -63,7 +63,7 @@ func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal s
 		"tid": token.ID,       // jwt token ID
 	}, tool.P_384)
 	if err != nil {
-		return err.Error(), errors.New("token refresh fail")
+		return errors.New("token refresh fail")
 	}
 
 	// 响应头填充 token
