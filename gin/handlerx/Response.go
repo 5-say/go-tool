@@ -32,7 +32,7 @@ func (Response) Success(t ...any) *ResponseBag {
 //
 //	return response.Error()
 //	return response.Error(500)
-//	return response.Error(err)
+//	return response.Error(err) // 接收 error 类型，只打印日志，不输出到 message
 //	return response.Error("error message")
 func (Response) Error(t ...any) *ResponseBag {
 	var r = ResponseBag{httpStatusCode: 422}
@@ -42,7 +42,7 @@ func (Response) Error(t ...any) *ResponseBag {
 		case int:
 			r.Code(v)
 		case error:
-			logx.Error().Err(v).Send()
+			logx.Error().CallerSkipFrame(1).Err(v).Send()
 		case string:
 			r.Message(v)
 		}

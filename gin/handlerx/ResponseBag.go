@@ -1,5 +1,7 @@
 package handlerx
 
+import "github.com/5-say/go-tool/logx"
+
 // ResponseBag ..
 type ResponseBag struct {
 	httpStatusCode int
@@ -29,5 +31,11 @@ func (r *ResponseBag) Data(data any) *ResponseBag {
 // Message ..
 func (r *ResponseBag) Message(message string) *ResponseBag {
 	r.message = message
+	return r
+}
+
+// Debug ..
+func (r *ResponseBag) Debug(i interface{}) *ResponseBag {
+	logx.Debug().CallerSkipFrame(1).Any("", i).Send()
 	return r
 }

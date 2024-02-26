@@ -17,9 +17,11 @@ type InternalHandler = func(c *gin.Context, response Response) *ResponseBag
 func Wrap(c *gin.Context, internalHandler InternalHandler) {
 	var r = internalHandler(c, Response{})
 	// 构造响应
-	c.AbortWithStatusJSON(r.httpStatusCode, map[string]any{
-		"mark":    r.mark,
-		"data":    r.data,
-		"message": r.message,
-	})
+	if r != nil {
+		c.AbortWithStatusJSON(r.httpStatusCode, map[string]any{
+			"mark":    r.mark,
+			"data":    r.data,
+			"message": r.message,
+		})
+	}
 }
