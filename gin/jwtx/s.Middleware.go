@@ -17,7 +17,9 @@ import (
 
 // MiddlewareHandlerFunc ..
 var MiddlewareHandlerFunc = func(c *gin.Context) {
-	handlerx.Response{}.Error(401)
+	handlerx.Wrap(c, func(c *gin.Context, response handlerx.Response) *handlerx.ResponseBag {
+		return response.Error(401)
+	})
 }
 
 // jwtx token 中间件（token 解析、校验、刷新） ..
