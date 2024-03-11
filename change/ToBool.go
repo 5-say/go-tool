@@ -1,18 +1,24 @@
 package change
 
-func ToBool[FromType Simple | SimplePointor](data FromType) bool {
+func ToBool[FromType Simple | SimplePointor](data FromType) (to bool, err error) {
 
 	switch v := any(data).(type) {
 	case string:
-		return v == "true"
+		return v == "true", nil
 	case bool:
-		return v
+		return v, nil
 	case *string:
-		return *v == "true"
+		if v == nil {
+			return false, ErrNilPointer
+		}
+		return *v == "true", nil
 	case *bool:
-		return *v
+		if v == nil {
+			return false, ErrNilPointer
+		}
+		return *v, nil
 	default:
-		f64, _ := ToFloat64(data)
-		return f64 != 0
+		f64, err := ToFloat64(data)
+		return f64 != 0, err
 	}
 }

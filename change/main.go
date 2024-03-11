@@ -1,8 +1,12 @@
 package change
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+)
 
-var ErrRange = errors.New("value out of range")
+var ErrRange = strconv.ErrRange
+var ErrNilPointer = errors.New("value is nil pointer")
 
 type Simple interface {
 	string |
