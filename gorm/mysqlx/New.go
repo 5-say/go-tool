@@ -13,7 +13,7 @@ import (
 //	dsn       string
 //	useLogger logger.Interface
 //
-// ex:
+// e.g.
 //
 //	mysqlx.New("", logger.Discard)
 //	mysqlx.New("", logger.Default.LogMode(logger.Error))

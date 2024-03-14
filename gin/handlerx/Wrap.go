@@ -5,11 +5,11 @@ import (
 )
 
 // InternalHandler ..
-type InternalHandler = func(c *gin.Context, response Response) *ResponseBag
+type InternalHandler = func(c *gin.Context, r Response) *ResponseBag
 
 // Wrap ..
 //
-// ex:
+// e.g.
 //
 //	handlerx.Wrap(c, func(c *gin.Context, response handlerx.Response) *handlerx.ResponseBag {
 //		return response.Success()
@@ -19,8 +19,9 @@ func Wrap(c *gin.Context, internalHandler InternalHandler) {
 	// 构造响应
 	if r != nil {
 		c.AbortWithStatusJSON(r.httpStatusCode, map[string]any{
-			"mark":    r.mark,
 			"data":    r.data,
+			"mark":    r.mark,
+			"status":  r.status,
 			"message": r.message,
 		})
 	}

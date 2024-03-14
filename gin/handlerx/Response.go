@@ -7,13 +7,13 @@ type Response struct{}
 
 // Success ..
 //
-// ex:
+// e.g.
 //
 //	return response.Success()
 //	return response.Success(400)
 //	return response.Success("success message")
 func (Response) Success(t ...any) *ResponseBag {
-	var r = ResponseBag{httpStatusCode: 200}
+	var r = ResponseBag{httpStatusCode: 200, status: "success"}
 	r.data = struct{}{}
 	if len(t) == 1 {
 		switch v := t[0].(type) {
@@ -28,14 +28,14 @@ func (Response) Success(t ...any) *ResponseBag {
 
 // Error ..
 //
-// ex:
+// e.g.
 //
 //	return response.Error()
 //	return response.Error(500)
 //	return response.Error(err) // 接收 error 类型，只打印日志，不输出到 message
 //	return response.Error("error message")
 func (Response) Error(t ...any) *ResponseBag {
-	var r = ResponseBag{httpStatusCode: 422}
+	var r = ResponseBag{httpStatusCode: 422, status: "error"}
 	r.data = struct{}{}
 	if len(t) == 1 {
 		switch v := t[0].(type) {

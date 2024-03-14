@@ -16,7 +16,7 @@ var (
 
 // InitGormWriter
 //
-// ex:
+// e.g.
 //
 //	logx.InitGormWriter(logx.DefaultWriter("gorm.log", true))
 func InitGormWriter(writer io.Writer) {
@@ -27,7 +27,7 @@ func InitGormWriter(writer io.Writer) {
 
 // GormLogger
 //
-// ex:
+// e.g.
 //
 //	logx.GormLogger(logger.Config{
 //		SlowThreshold:             200 * time.Millisecond,

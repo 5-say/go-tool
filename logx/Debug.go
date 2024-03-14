@@ -15,7 +15,7 @@ var (
 
 // InitDebugWriter
 //
-// ex:
+// e.g.
 //
 //	logx.InitDebugWriter(logx.DefaultWriter("debug.log", true))
 func InitDebugWriter(writer io.Writer) {
@@ -26,7 +26,7 @@ func InitDebugWriter(writer io.Writer) {
 
 // Debug
 //
-// ex:
+// e.g.
 //
 //	logx.Debug().Msg("")
 //	logx.Debug().Any("data", data).Send()

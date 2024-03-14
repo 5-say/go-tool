@@ -18,7 +18,7 @@ import (
 //	configPath     string 分组配置文件路径
 //	privateKeyPath string 分组私钥文件路径
 //
-// ex:
+// e.g.
 //
 //	jwtx.InitGroup("admin", "jwtx/config/admin.yaml", "jwtx/config/admin.key")
 //	jwtx.InitGroup("user",  "jwtx/config/user.yaml",  "jwtx/config/user.key")

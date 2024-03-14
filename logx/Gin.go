@@ -15,7 +15,7 @@ var (
 
 // InitGinWriter
 //
-// ex:
+// e.g.
 //
 //	logx.InitGinWriter(logx.DefaultWriter("gin.log", true))
 func InitGinWriter(writer io.Writer) {
@@ -26,7 +26,7 @@ func InitGinWriter(writer io.Writer) {
 
 // GinWriter
 //
-// ex:
+// e.g.
 //
 //	gin.DefaultWriter = logx.GinWriter()
 //	gin.DefaultErrorWriter = logx.GinWriter()

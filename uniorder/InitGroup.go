@@ -12,7 +12,7 @@ import (
 //	lastCycleNum     uint64 // 已使用的最后一个订单号的 周期数
 //	lastInCycleIndex uint64 // 已使用的最后一个订单号的 周期内索引
 //
-// ex:
+// e.g.
 //
 //	uniorder.InitGroup("demo", 18, 0, 0)
 func InitGroup(group string, rollingHours, lastCycleNum, lastInCycleIndex uint64) {

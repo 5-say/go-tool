@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/5-say/go-tool/ecdsatool"
+	"github.com/5-say/go-tool/crypto/ecdsatool"
 )
 
 func Test_GenerateKey(t *testing.T) {

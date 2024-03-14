@@ -18,7 +18,7 @@ import (
 //	loginTerminal string       登录的 终端名称
 //	accountID     uint32       登录的 账户 ID
 //
-// ex:
+// e.g.
 //
 //	jwtx.Singleton.Login(c, "admin", "pc", 1)
 //	jwtx.Singleton.Login(c, "admin", "mobile", 1)

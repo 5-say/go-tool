@@ -15,7 +15,7 @@ import (
 //	loginTerminal string       登录的 终端名称（当传值为“all”时，无视配置，强制登出所有终端）
 //	accountID     uint32       登录的 账户 ID
 //
-// ex:
+// e.g.
 //
 //	jwtx.Singleton.Logout(c, "admin", "pc", 1)
 //	jwtx.Singleton.Logout(c, "admin", "all", 1)

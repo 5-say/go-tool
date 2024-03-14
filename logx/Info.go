@@ -15,7 +15,7 @@ var (
 
 // InitInfoWriter
 //
-// ex:
+// e.g.
 //
 //	logx.InitInfoWriter(logx.DefaultWriter("info.log", true))
 func InitInfoWriter(writer io.Writer) {
@@ -26,7 +26,7 @@ func InitInfoWriter(writer io.Writer) {
 
 // Info
 //
-// ex:
+// e.g.
 //
 //	logx.Info().Msg("")
 //	logx.Info().Any("data", data).Send()

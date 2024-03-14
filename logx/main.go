@@ -4,14 +4,14 @@ import "io"
 
 // LoggingLocationName
 //
-// ex:
+// e.g.
 //
 //	logx.LoggingLocationName = "Asia/Shanghai"
 var LoggingLocationName = "UTC"
 
 // DefaultWriter ..
 //
-// ex:
+// e.g.
 //
 //	logx.DefaultWriter("logs/demo.log", true)
 func DefaultWriter(fileName string, useAsync bool) io.Writer {
@@ -35,7 +35,7 @@ func DefaultWriter(fileName string, useAsync bool) io.Writer {
 
 // 初始化日志
 //
-// ex:
+// e.g.
 //
 //	logx.InitDefault("logs/app", "Asia/Shanghai", isTestMode, "info", "error", "debug", "gin", "gorm")
 func InitDefault(filePath, loggingLocationName string, isTestMode bool, tags ...string) {

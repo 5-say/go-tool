@@ -4,7 +4,7 @@ import (
 	"crypto/ecdsa"
 	"os"
 
-	"github.com/5-say/go-tool/ecdsatool"
+	"github.com/5-say/go-tool/crypto/ecdsatool"
 )
 
 // GetPrivateKey .. 从 PEM 格式文件 获取 私钥对象

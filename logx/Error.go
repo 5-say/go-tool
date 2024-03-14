@@ -15,7 +15,7 @@ var (
 
 // InitErrorWriter
 //
-// ex:
+// e.g.
 //
 //	logx.InitErrorWriter(logx.DefaultWriter("error.log", true))
 func InitErrorWriter(writer io.Writer) {
@@ -26,7 +26,7 @@ func InitErrorWriter(writer io.Writer) {
 
 // Error
 //
-// ex:
+// e.g.
 //
 //	logx.Error().Msg("")
 //	logx.Error().Any("data", data).Send()

@@ -26,7 +26,7 @@ var MiddlewareHandlerFunc = func(c *gin.Context) {
 //
 //	requestGroup string 请求访问的分组
 //
-// ex:
+// e.g.
 //
 //	jwtx.Singleton.Middleware("admin")
 //	jwtx.Singleton.Middleware("merchant")
