@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"time"
 
+	"github.com/5-say/go-tool/gin/jwtx/db/dao/model"
 	"github.com/5-say/go-tool/gin/jwtx/tool"
 	"github.com/5-say/go-tool/gorm/mysqlx"
 	"github.com/5-say/go-tool/logx"
@@ -49,6 +50,9 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
 		ParameterizedQueries:      false,
 		LogLevel:                  logger.Warn,
 	}))
+
+	// 初始化数据库结构
+	s.DB[group].AutoMigrate(&model.JwtxToken{})
 
 	// 初始化分组私钥
 	privateKey, err := tool.GetPrivateKey(privateKeyPath)
