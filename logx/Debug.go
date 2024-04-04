@@ -19,7 +19,7 @@ var (
 //
 //	logx.InitDebugWriter(logx.DefaultWriter("debug.log", true))
 func InitDebugWriter(writer io.Writer) {
-	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 	// 存储单例
 	debugLogger = &l
 }
@@ -34,6 +34,6 @@ func Debug() *zerolog.Event {
 	if debugLogger != nil {
 		return debugLogger.Debug()
 	}
-	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 	return l.Debug()
 }

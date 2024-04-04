@@ -19,7 +19,7 @@ var (
 //
 //	logx.InitGinWriter(logx.DefaultWriter("gin.log", true))
 func InitGinWriter(writer io.Writer) {
-	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 	// 存储单例
 	ginWriter = l
 }
@@ -35,5 +35,5 @@ func GinWriter() io.Writer {
 	if ginWriter != nil {
 		return ginWriter
 	}
-	return zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	return zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 }

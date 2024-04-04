@@ -19,7 +19,7 @@ var (
 //
 //	logx.InitInfoWriter(logx.DefaultWriter("info.log", true))
 func InitInfoWriter(writer io.Writer) {
-	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 	// 存储单例
 	infoLogger = &l
 }
@@ -34,6 +34,6 @@ func Info() *zerolog.Event {
 	if infoLogger != nil {
 		return infoLogger.Info()
 	}
-	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Caller().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Caller().Logger()
 	return l.Info()
 }

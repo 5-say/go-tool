@@ -20,7 +20,7 @@ var (
 //
 //	logx.InitGormWriter(logx.DefaultWriter("gorm.log", true))
 func InitGormWriter(writer io.Writer) {
-	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: writer, NoColor: true, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Logger()
 	// 存储单例
 	gormWriter = &l
 }
@@ -40,7 +40,7 @@ func GormLogger(config logger.Config) logger.Interface {
 		config.Colorful = false
 		return logger.New(gormWriter, config)
 	}
-	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(LoggingLocationName)}).With().Timestamp().Logger()
+	l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, NoColor: false, FormatTimestamp: tool.ZerologFormatTimestamp(loggingLocationName)}).With().Timestamp().Logger()
 	config.Colorful = true
 	return logger.New(&l, config)
 }
