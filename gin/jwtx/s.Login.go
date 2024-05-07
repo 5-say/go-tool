@@ -67,6 +67,7 @@ func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal s
 	}
 
 	// 响应头填充 token
+	c.Writer.Header().Add("Access-Control-Expose-Headers", "token") // 突破浏览器跨域限制
 	c.Writer.Header().Add("token", tokenStr)
 
 	return
