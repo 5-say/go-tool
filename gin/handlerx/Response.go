@@ -31,8 +31,9 @@ func (Response) Success(t ...any) *ResponseBag {
 //
 //	return r.Error()
 //	return r.Error(500)
+//	return r.Error(err)
 //	return r.Error("error message")
-//	return r.Error().Log(err)
+//	return r.Error().Log(any)
 func (Response) Error(t ...any) *ResponseBag {
 	var r = ResponseBag{httpStatusCode: 422, mark: "error"}
 	r.resource = struct{}{}
@@ -40,6 +41,8 @@ func (Response) Error(t ...any) *ResponseBag {
 		switch v := t[0].(type) {
 		case int:
 			r.HTTPCode(v)
+		case error:
+			r.Log(v)
 		case string:
 			r.Message(v)
 		}

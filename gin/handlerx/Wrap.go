@@ -20,7 +20,7 @@ func Wrap(c *gin.Context, internalHandler InternalHandler) {
 	if r != nil {
 		c.AbortWithStatusJSON(r.httpStatusCode, map[string]any{
 			"mark":     r.mark,
-			"message":  r.message,
+			"message":  Language.Get(r.message),
 			"resource": r.resource,
 		})
 	}
