@@ -1,7 +1,5 @@
 package handlerx
 
-import "github.com/5-say/go-tool/logx"
-
 // 自定义响应
 type Response struct{}
 
@@ -9,16 +7,17 @@ type Response struct{}
 //
 // e.g.
 //
-//	return response.Success()
-//	return response.Success(400)
-//	return response.Success("success message")
+//	return r.Success()
+//	return r.Success(400)
+//	return r.Success("success message")
+//	return r.Success().Resource(gin.H{})
 func (Response) Success(t ...any) *ResponseBag {
-	var r = ResponseBag{httpStatusCode: 200, status: "success"}
-	r.data = struct{}{}
+	var r = ResponseBag{httpStatusCode: 200, mark: "success"}
+	r.resource = struct{}{}
 	if len(t) == 1 {
 		switch v := t[0].(type) {
 		case int:
-			r.Code(v)
+			r.HTTPCode(v)
 		case string:
 			r.Message(v)
 		}
@@ -30,19 +29,17 @@ func (Response) Success(t ...any) *ResponseBag {
 //
 // e.g.
 //
-//	return response.Error()
-//	return response.Error(500)
-//	return response.Error(err) // 接收 error 类型，只打印日志，不输出到 message
-//	return response.Error("error message")
+//	return r.Error()
+//	return r.Error(500)
+//	return r.Error("error message")
+//	return r.Error().Log(err)
 func (Response) Error(t ...any) *ResponseBag {
-	var r = ResponseBag{httpStatusCode: 422, status: "error"}
-	r.data = struct{}{}
+	var r = ResponseBag{httpStatusCode: 422, mark: "error"}
+	r.resource = struct{}{}
 	if len(t) == 1 {
 		switch v := t[0].(type) {
 		case int:
-			r.Code(v)
-		case error:
-			logx.Error().CallerSkipFrame(1).Err(v).Send()
+			r.HTTPCode(v)
 		case string:
 			r.Message(v)
 		}
