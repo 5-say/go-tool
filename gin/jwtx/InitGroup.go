@@ -4,13 +4,17 @@ import (
 	"crypto/ecdsa"
 	"time"
 
+	"github.com/5-say/go-tool/crypto/ecdsatool"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/model"
 	"github.com/5-say/go-tool/gin/jwtx/tool"
 	"github.com/5-say/go-tool/gorm/mysqlx"
 	"github.com/5-say/go-tool/logx"
+	"github.com/5-say/go-tool/utilx"
 	"github.com/jinzhu/configor"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	_ "embed"
 )
 
 // 初始化分组（支持多次调用）
@@ -24,6 +28,12 @@ import (
 //	jwtx.InitGroup("admin", "jwtx/config/admin.yaml", "jwtx/config/admin.key")
 //	jwtx.InitGroup("user",  "jwtx/config/user.yaml",  "jwtx/config/user.key")
 func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
+	// 配置文件不存在则创建
+	createConfigFileIfNotExist(configPath)
+
+	// 私钥文件不存在则创建
+	createKeyFileIfNotExist(privateKeyPath)
+
 	// 取得单例
 	if Singleton == nil {
 		Singleton = &SingletonMode{}
@@ -35,9 +45,9 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
 	// 引用简化
 	var s = Singleton
 
-	// 初始化分组配置
+	// 初始化分组配置，每秒自动更新
 	var config GroupConfig
-	err := configor.Load(&config, configPath)
+	err := configor.New(&configor.Config{AutoReload: true}).Load(&config, configPath)
 	if err != nil {
 		panic(err)
 	}
@@ -62,4 +72,25 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
 	s.PrivateKey[group] = privateKey
 
 	return s
+}
+
+//go:embed example/demo.yaml
+var demoConfig string
+
+func createConfigFileIfNotExist(filePath string) {
+	utilx.ForceCreateWriteIfNotExist(filePath, 0755, demoConfig)
+}
+
+func createKeyFileIfNotExist(filePath string) {
+	key, _ := ecdsatool.GenerateKey(ecdsatool.P_384)
+	privateKeyPEMBytes, _ := ecdsatool.PEM_EncodePrivateKey(key)
+	content := "\n"
+	content += "密钥格式: NIST P-384"
+	content += "\n\n"
+	content += string(privateKeyPEMBytes)
+	content += "\n"
+	content += "密钥格式: NIST P-384"
+	content += "\n"
+
+	utilx.ForceCreateWriteIfNotExist(filePath, 0755, content)
 }

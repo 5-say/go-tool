@@ -1,10 +1,15 @@
-package iptool
+package utilx
 
 import (
 	"net"
 	"net/http"
 	"strings"
 )
+
+/*
+https://ipinfo.io
+https://github.com/ipinfo/go
+*/
 
 // GetRequestIP .. 获取客户端 IP 地址
 func GetRequestIP(r *http.Request) (ip string) {

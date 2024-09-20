@@ -17,8 +17,8 @@ import (
 
 // MiddlewareHandlerFunc ..
 var MiddlewareHandlerFunc = func(c *gin.Context) {
-	handlerx.Wrap(c, func(c *gin.Context, response handlerx.Response) *handlerx.ResponseBag {
-		return response.Error(401)
+	handlerx.Wrap(c, func(c *gin.Context, r handlerx.Response) *handlerx.ResponseBag {
+		return r.Error(401)
 	})
 }
 
@@ -80,9 +80,10 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 		}
 
 		// 将当前登录的账户信息存储上下文
-		c.Set("jwtx.accountID", token.AccountID)
-		c.Set("jwtx.loginGroup", token.LoginGroup)
-		c.Set("jwtx.loginTerminal", token.LoginTerminal)
+		c.Set("jwtx.accountID", token.AccountID)         // 账户 ID
+		c.Set("jwtx.loginGroup", token.LoginGroup)       // 登录的分组
+		c.Set("jwtx.loginTerminal", token.LoginTerminal) // 登录的终端
+		c.Set("jwtx.makeTokenIP", token.MakeTokenIP)     // 首次请求生成 token 的 IP 地址
 
 		// 请求前
 		c.Next()

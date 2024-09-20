@@ -15,7 +15,7 @@ import (
 //
 //	c             *gin.Context
 //	loginGroup    string       登录的 token 分组
-//	loginTerminal string       登录的 终端名称
+//	loginTerminal string       登录的 终端名称（后续登出时，若引用此处的传值为“all”，则无视配置，强制登出所有终端）
 //	accountID     uint32       登录的 账户 ID
 //
 // e.g.
