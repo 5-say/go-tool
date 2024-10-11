@@ -8,6 +8,8 @@ import (
 )
 
 func Test_Base64_GenerateKey(t *testing.T) {
-	_, err := aestool.GenerateKey(aestool.AES_256)
+	key, err := aestool.GenerateKey(aestool.AES_256)
 	assert.Equal(t, err, nil)
+	t.Log(key)
+	t.Fail()
 }

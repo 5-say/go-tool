@@ -18,7 +18,8 @@ func Wrap(c *gin.Context, internalHandler InternalHandler) {
 	var r = internalHandler(c, Response{})
 	// 构造响应
 	if r != nil {
-		c.AbortWithStatusJSON(r.httpStatusCode, map[string]any{
+		c.Abort()
+		c.PureJSON(r.httpStatusCode, map[string]any{
 			"mark":     r.mark,
 			"message":  Language.Get(r.message),
 			"resource": r.resource,

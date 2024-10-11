@@ -35,7 +35,7 @@ func New(dsn string, useLogger logger.Interface) *gorm.DB {
 	})
 
 	if err != nil {
-		log.Fatalf("Fail to db logger: %v\n", err)
+		log.Fatalf("Fail to db logger: %v [dsn: %s] \n", err, dsn)
 	}
 
 	return db
