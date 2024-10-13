@@ -7,10 +7,10 @@ import (
 )
 
 // 单例
-var Singleton *SingletonMode
+var Singleton *SingletonT
 
-// SingletonMode ..
-type SingletonMode struct {
+// SingletonT ..
+type SingletonT struct {
 	DB         map[string]*gorm.DB
 	Config     map[string]GroupConfig
 	PrivateKey map[string]*ecdsa.PrivateKey

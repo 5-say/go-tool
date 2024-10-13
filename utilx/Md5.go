@@ -6,7 +6,12 @@ import (
 	"io"
 )
 
-func Md5Str(str string) (md5String string) {
+var Md5 Md5T
+
+type Md5T struct{}
+
+// 字符串 md5
+func (Md5T) String(str string) (md5String string) {
 	// 创建一个新的hash.Hash对象，用于MD5加密
 	hasher := md5.New()
 

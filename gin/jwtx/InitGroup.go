@@ -27,7 +27,7 @@ import (
 //
 //	jwtx.InitGroup("admin", "jwtx/config/admin.yaml", "jwtx/config/admin.key")
 //	jwtx.InitGroup("user",  "jwtx/config/user.yaml",  "jwtx/config/user.key")
-func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
+func InitGroup(group, configPath, privateKeyPath string) *SingletonT {
 	// 配置文件不存在则创建
 	createConfigFileIfNotExist(configPath)
 
@@ -36,7 +36,7 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonMode {
 
 	// 取得单例
 	if Singleton == nil {
-		Singleton = &SingletonMode{}
+		Singleton = &SingletonT{}
 		Singleton.DB = make(map[string]*gorm.DB)
 		Singleton.Config = make(map[string]GroupConfig)
 		Singleton.PrivateKey = make(map[string]*ecdsa.PrivateKey)

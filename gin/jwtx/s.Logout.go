@@ -19,7 +19,7 @@ import (
 //
 //	jwtx.Singleton.Logout(c, "admin", "pc", 1)
 //	jwtx.Singleton.Logout(c, "admin", "all", 1)
-func (s *SingletonMode) Logout(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
+func (s *SingletonT) Logout(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
 	// 获取分组配置
 	var (
 		q      = query.Use(s.DB[loginGroup])

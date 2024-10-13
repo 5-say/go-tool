@@ -22,7 +22,7 @@ import (
 //
 //	jwtx.Singleton.Login(c, "admin", "pc", 1)
 //	jwtx.Singleton.Login(c, "admin", "mobile", 1)
-func (s *SingletonMode) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
+func (s *SingletonT) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
 	// 获取分组配置
 	var (
 		config     = s.Config[loginGroup]

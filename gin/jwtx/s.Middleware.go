@@ -30,7 +30,7 @@ var MiddlewareHandlerFunc = func(c *gin.Context) {
 //
 //	jwtx.Singleton.Middleware("admin")
 //	jwtx.Singleton.Middleware("merchant")
-func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
+func (s *SingletonT) Middleware(requestGroup string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// 解析 token
@@ -95,7 +95,7 @@ func (s *SingletonMode) Middleware(requestGroup string) gin.HandlerFunc {
 }
 
 // 获取数据库 token 信息
-func (s *SingletonMode) getDBToken(group string, tid uint64) (token *model.JwtxToken, log string, err error) {
+func (s *SingletonT) getDBToken(group string, tid uint64) (token *model.JwtxToken, log string, err error) {
 	// 查找 token
 	q := query.Use(s.DB[group])
 	o := q.JwtxToken
@@ -107,7 +107,7 @@ func (s *SingletonMode) getDBToken(group string, tid uint64) (token *model.JwtxT
 }
 
 // 校验数据库 token 信息
-func (s *SingletonMode) checkDBToken(group string, token *model.JwtxToken, now time.Time, clientIP string) (log string, err error) {
+func (s *SingletonT) checkDBToken(group string, token *model.JwtxToken, now time.Time, clientIP string) (log string, err error) {
 	// 分组校验
 	if token.LoginGroup != group {
 		return "分组校验失败，客户端访问的分组 [" + group + "] 与 token 登录分组 [" + token.LoginGroup + "] 不匹配", errors.New("auth group fail")
@@ -126,7 +126,7 @@ func (s *SingletonMode) checkDBToken(group string, token *model.JwtxToken, now t
 }
 
 // 自动刷新 token
-func (s *SingletonMode) refreshToken(group string, token *model.JwtxToken, now time.Time, iat *jwt.NumericDate) (newToken string, log string, err error) {
+func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time.Time, iat *jwt.NumericDate) (newToken string, log string, err error) {
 
 	var config = s.Config[group]
 
