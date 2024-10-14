@@ -11,6 +11,5 @@ type ResponseT struct {
 	DefaultErrorHTTPCode   int
 
 	SuccessDataWarp func(data interface{}) interface{}
-
-	ErrorDataWarp func(message string) interface{}
+	ErrorDataWarp   func(data interface{}) interface{}
 }

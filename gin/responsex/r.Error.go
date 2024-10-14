@@ -1,13 +1,15 @@
 package responsex
 
+import "github.com/gin-gonic/gin"
+
 // Error ..
 //
 // e.g.
 //
 //	r.Error()
-//	r.Error(message string)
-func (s ResponseT) Error(message ...string) LogT {
-	return s.ErrorCode(s.DefaultErrorHTTPCode, message...)
+//	r.Error(data interface{})
+func (s ResponseT) Error(data ...interface{}) LogT {
+	return s.ErrorCode(s.DefaultErrorHTTPCode, data...)
 }
 
 // ErrorCode ..
@@ -15,14 +17,14 @@ func (s ResponseT) Error(message ...string) LogT {
 // e.g.
 //
 //	r.ErrorCode(httpStatusCode int)
-//	r.ErrorCode(httpStatusCode int, message string)
-func (s ResponseT) ErrorCode(httpStatusCode int, message ...string) LogT {
+//	r.ErrorCode(httpStatusCode int, data interface{})
+func (s ResponseT) ErrorCode(httpStatusCode int, data ...interface{}) LogT {
 	// 构造响应数据
 	var responseData interface{}
-	if len(message) == 0 {
-		responseData = s.ErrorDataWarp("")
+	if len(data) == 0 {
+		responseData = s.ErrorDataWarp(gin.H{})
 	} else {
-		responseData = s.ErrorDataWarp(message[0])
+		responseData = s.ErrorDataWarp(data[0])
 	}
 
 	s.C.Abort()

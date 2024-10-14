@@ -14,6 +14,12 @@ import (
 //
 //	aestool.EncryptCBC(key, ciphertext)
 func DecryptCBC(key, ciphertext []byte) (original []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+			return
+		}
+	}()
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
