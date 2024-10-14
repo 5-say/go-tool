@@ -22,10 +22,20 @@ func CustomResponse(c *gin.Context) responsex.ResponseT {
 			}
 		},
 
-		ErrorDataWarp: func(message string) interface{} {
-			return gin.H{
-				"message":  message,
-				"resource": gin.H{},
+		ErrorDataWarp: func(data interface{}) interface{} {
+			switch data := data.(type) {
+			case string:
+				return gin.H{
+					"message":  data,
+					"resource": gin.H{},
+				}
+			case error:
+				return gin.H{
+					"message":  data.Error(),
+					"resource": gin.H{},
+				}
+			default:
+				return data
 			}
 		},
 	}
