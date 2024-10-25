@@ -8,8 +8,11 @@ type ResponseT struct {
 	C *gin.Context
 
 	DefaultSuccessHTTPCode int
-	DefaultErrorHTTPCode   int
+	DefaultSuccessMessage  string
 
-	SuccessDataWarp func(data interface{}) interface{}
-	ErrorDataWarp   func(data interface{}) interface{}
+	DefaultErrorHTTPCode int
+	DefaultErrorMessage  string
+
+	SuccessDataWarp func(message string, data any) any
+	ErrorDataWarp   func(message string, data any, err error) any
 }

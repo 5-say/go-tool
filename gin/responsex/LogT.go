@@ -5,7 +5,7 @@ import "github.com/5-say/go-tool/logx"
 type LogT struct {
 	IsError        bool
 	HTTPStatusCode int
-	ResponseData   interface{}
+	ResponseData   any
 }
 
 // Log ..
@@ -26,8 +26,8 @@ func (s LogT) Log() LogT {
 //
 // e.g.
 //
-//	r.Error().Logf(format string, v ...interface{})
-func (s LogT) Logf(format string, v ...interface{}) LogT {
+//	r.Error().Log().Logf(format string, v ...any)
+func (s LogT) Logf(format string, v ...any) LogT {
 	if s.IsError {
 		logx.Error().CallerSkipFrame(1).Msgf(format, v...)
 	} else {

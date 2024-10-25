@@ -1,5 +1,7 @@
 package handlerx
 
+import "github.com/5-say/go-tool/logx"
+
 // 自定义响应
 type Response struct{}
 
@@ -42,7 +44,7 @@ func (Response) Error(t ...any) *ResponseBag {
 		case int:
 			r.HTTPCode(v)
 		case error:
-			r.Log(v)
+			logx.Debug().CallerSkipFrame(1).Err(v).Send()
 		case string:
 			r.Message(v)
 		}
