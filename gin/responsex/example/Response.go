@@ -28,12 +28,12 @@ func Response(c *gin.Context) responsex.ResponseT {
 		},
 
 		ErrorDataWarp: func(message string, data any, err error) any {
+			if message == "error" && err != nil {
+				message = err.Error()
+			}
 			var resource any = gin.H{}
 			if data != nil {
 				resource = data
-			}
-			if message == "error" && err != nil {
-				message = err.Error()
 			}
 			return gin.H{
 				"message":  message,
