@@ -13,6 +13,6 @@ type ResponseT struct {
 	DefaultErrorHTTPCode int
 	DefaultErrorMessage  string
 
-	SuccessDataWarp func(message string, data any) any
-	ErrorDataWarp   func(message string, data any, err error) any
+	SuccessDataWarp func(messageFormat []any, data any) any
+	ErrorDataWarp   func(messageFormat []any, data any, err error) any
 }

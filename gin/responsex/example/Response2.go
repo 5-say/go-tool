@@ -1,6 +1,8 @@
 package example
 
 import (
+	"fmt"
+
 	"github.com/5-say/go-tool/gin/responsex"
 	"github.com/gin-gonic/gin"
 )
@@ -16,36 +18,40 @@ func Response2(c *gin.Context) responsex.ResponseT {
 		DefaultErrorHTTPCode: 422,
 		DefaultErrorMessage:  "error",
 
-		SuccessDataWarp: func(message string, data any) any {
-			var (
-				dataObj any = gin.H{
-					"message": message,
-				}
-				errorObj any = gin.H{}
-			)
+		SuccessDataWarp: func(messageFormat []any, data any) any {
+			var message = fmt.Sprintf(messageFormat[0].(string), messageFormat[1:]...)
+
+			var dataObj any = gin.H{
+				"message": message,
+			}
 			if data != nil {
 				dataObj = data
 			}
+
+			var errorObj any = gin.H{}
+
 			return gin.H{
 				"data":  dataObj,
 				"error": errorObj,
 			}
 		},
 
-		ErrorDataWarp: func(message string, data any, err error) any {
+		ErrorDataWarp: func(messageFormat []any, data any, err error) any {
+			var message = fmt.Sprintf(messageFormat[0].(string), messageFormat[1:]...)
 			if message == "error" && err != nil {
 				message = err.Error()
 			}
-			var (
-				dataObj  any = gin.H{}
-				errorObj any = gin.H{
-					"code":    "",
-					"message": message,
-				}
-			)
+
+			var dataObj any = gin.H{}
+
+			var errorObj any = gin.H{
+				"code":    "",
+				"message": message,
+			}
 			if data != nil {
 				errorObj = data
 			}
+
 			return gin.H{
 				"data":  dataObj,
 				"error": errorObj,
