@@ -3,10 +3,8 @@ package jwtx
 import (
 	"context"
 	"errors"
-	"strconv"
 	"time"
 
-	"github.com/5-say/go-tool/gin/handlerx"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/model"
 	"github.com/5-say/go-tool/gin/jwtx/db/dao/query"
 	"github.com/5-say/go-tool/gin/jwtx/tool"
@@ -15,11 +13,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// MiddlewareHandlerFunc ..
-var MiddlewareHandlerFunc = func(c *gin.Context) {
-	handlerx.Wrap(c, func(c *gin.Context, r handlerx.Response) *handlerx.ResponseBag {
-		return r.Error(401)
-	})
+// 中间件认证失败后的处理函数 ..
+var MiddlewareFailHandlerFunc = func(c *gin.Context, err error) {
+	logx.Debug().Err(err)
+	c.AbortWithStatus(401)
 }
 
 // jwtx token 中间件（token 解析、校验、刷新） ..
@@ -36,8 +33,7 @@ func (s *SingletonT) Middleware(requestGroup string) gin.HandlerFunc {
 		// 解析 token
 		claims, err := tool.ParseToken(c.GetHeader("Authorization"), &s.PrivateKey[requestGroup].PublicKey)
 		if err != nil {
-			logx.Error().Err(err).Msg("解析 token 失败")
-			MiddlewareHandlerFunc(c)
+			MiddlewareFailHandlerFunc(c, err)
 			return
 		}
 
@@ -51,31 +47,28 @@ func (s *SingletonT) Middleware(requestGroup string) gin.HandlerFunc {
 
 		// token 过期时间校验
 		if exp.Unix() < now.Unix() {
-			MiddlewareHandlerFunc(c)
+			MiddlewareFailHandlerFunc(c, errors.New("token has expired"))
 			return
 		}
 
 		// 数据库中查找 token
-		token, log, err := s.getDBToken(requestGroup, tid)
+		token, err := s.getDBToken(requestGroup, tid)
 		if err != nil {
-			logx.Error().Err(err).Msg(log)
-			MiddlewareHandlerFunc(c)
+			MiddlewareFailHandlerFunc(c, err)
 			return
 		}
 
 		// 校验数据库 token 信息
-		log, err = s.checkDBToken(requestGroup, token, now, c.ClientIP())
+		err = s.checkDBToken(requestGroup, token, now, c.ClientIP())
 		if err != nil {
-			logx.Error().Err(err).Msg(log)
-			MiddlewareHandlerFunc(c)
+			MiddlewareFailHandlerFunc(c, err)
 			return
 		}
 
 		// 刷新 token
-		newToken, log, err := s.refreshToken(requestGroup, token, now, iat)
+		newToken, err := s.refreshToken(requestGroup, token, now, iat)
 		if err != nil {
-			logx.Error().Err(err).Msg(log)
-			MiddlewareHandlerFunc(c)
+			MiddlewareFailHandlerFunc(c, err)
 			return
 		}
 
@@ -95,38 +88,38 @@ func (s *SingletonT) Middleware(requestGroup string) gin.HandlerFunc {
 }
 
 // 获取数据库 token 信息
-func (s *SingletonT) getDBToken(group string, tid uint64) (token *model.JwtxToken, log string, err error) {
+func (s *SingletonT) getDBToken(group string, tid uint64) (token *model.JwtxToken, err error) {
 	// 查找 token
 	q := query.Use(s.DB[group])
 	o := q.JwtxToken
 	token, err = o.WithContext(context.Background()).Where(o.ID.Eq(tid)).First()
 	if err != nil {
-		return nil, "数据库 token id [" + strconv.Itoa(int(tid)) + "] 不存在 [sqlfail: " + err.Error() + "]", errors.New("token not found")
+		return nil, err
 	}
-	return token, "", nil
+	return token, nil
 }
 
 // 校验数据库 token 信息
-func (s *SingletonT) checkDBToken(group string, token *model.JwtxToken, now time.Time, clientIP string) (log string, err error) {
+func (s *SingletonT) checkDBToken(group string, token *model.JwtxToken, now time.Time, clientIP string) (err error) {
 	// 分组校验
 	if token.LoginGroup != group {
-		return "分组校验失败，客户端访问的分组 [" + group + "] 与 token 登录分组 [" + token.LoginGroup + "] 不匹配", errors.New("auth group fail")
+		return errors.New("auth group fail")
 	}
 	// 过期时间校验
 	if token.ExpirationAt.Unix() < now.Unix() {
-		return "数据库 token 过期时间校验不通过", errors.New("the token has expired")
+		return errors.New("the token has expired")
 	}
 	// IP 一致性校验
 	if s.Config[group].CheckIP {
 		if clientIP != token.MakeTokenIP {
-			return "ip 一致性校验失败，客户端 ip [" + clientIP + "] 与 token 登录 ip [" + token.MakeTokenIP + "] 不匹配", errors.New("client ip is changed, please login again")
+			return errors.New("client ip is changed, please login again")
 		}
 	}
 	return
 }
 
 // 自动刷新 token
-func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time.Time, iat *jwt.NumericDate) (newToken string, log string, err error) {
+func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time.Time, iat *jwt.NumericDate) (newToken string, err error) {
 
 	var config = s.Config[group]
 
@@ -150,7 +143,7 @@ func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time
 				"tid": token.ID,       // jwt token ID
 			}, tool.P_384)
 			if err != nil {
-				return "", err.Error(), errors.New("token refresh fail")
+				return "", err
 			}
 
 			// 更新数据库
@@ -161,7 +154,7 @@ func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time
 				o.FinalRefreshAt.Value(now),
 			)
 			if err != nil {
-				return "", err.Error(), errors.New("new token save fail")
+				return "", err
 			}
 		}
 
@@ -169,7 +162,7 @@ func (s *SingletonT) refreshToken(group string, token *model.JwtxToken, now time
 
 		// 当前时间 超出 并发容错时间（不允许继续使用）
 		if now.Unix() > token.FinalRefreshAt.Unix()+config.FaultTolerance {
-			return "", "token 超出 并发容错时间", errors.New("out of concurrent fault tolerance time")
+			return "", errors.New("out of concurrent fault tolerance time")
 		}
 	}
 
