@@ -77,5 +77,5 @@ func ToString[FromType Simple | SimplePointor](data FromType) (string, error) {
 		}
 		return fmt.Sprint(*v), nil
 	}
-	return "", ErrRange
+	return fmt.Sprint(data), nil
 }
