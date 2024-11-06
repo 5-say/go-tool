@@ -9,6 +9,11 @@ var Language = responsex.LanguageT{
 	Use: "pt",
 	Map: map[string]map[string]string{
 		"pt": {
+			"":          "%s",
+			"success":   "Success",
+			"error":     "Error",
+			"参数错误":      "Erro de parâmetro",
+			"操作失败":      "Falha na operação",
 			"最小提现金额：%v": "Valor mínimo de retirada: %v",
 		},
 	},
