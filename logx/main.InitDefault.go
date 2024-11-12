@@ -1,6 +1,11 @@
 package logx
 
-import "io"
+import (
+	"io"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/pkgerrors"
+)
 
 // 初始化日志，使用默认配置快速初始化
 //
@@ -9,6 +14,9 @@ import "io"
 //	logx.InitDefault("logs/app", "Asia/Shanghai", useAsync, "info", "error", "debug", "gorm", "gin")
 //	logx.InitDefault("logs/app", "Asia/Shanghai", useAsync, "info", "error", "debug", "gorm", "nano")
 func InitDefault(filePath, locationName string, useAsync bool, tags ...string) {
+
+	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+
 	loggingLocationName = locationName
 	w := func(tag string) io.Writer {
 		return DefaultWriter(filePath+"."+tag+".log", useAsync)

@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/jinzhu/configor v1.2.2
+	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
 	golang.org/x/crypto v0.23.0
 	gorm.io/driver/mysql v1.5.2
