@@ -8,6 +8,26 @@ import (
 )
 
 // 发起 POST 请求，发送 表单 参数
+//
+//	切记！`urlStr` 一定要带 `http://` 或 `http://` 前缀
+//	否则 `client.Do(req)` 会抛出错误 `unsupported protocol scheme ""`
+//
+//	urlStr     string
+//	formParams map[string]string
+//	headers    map[string]string
+//
+//	return
+//
+//	httpx.ResponseT struct {
+//		Error      error
+//		Body       []byte
+//		StatusCode int
+//		BindJSON   func (obj any) statusCode int, err error // 解析响应，绑定到对象
+//	}
+//
+// e.g.
+//
+//	statusCode, err := httpx.Post(urlStr, formParams, headers).BindJSON(&apiResult)
 func Post(urlStr string, formParams, headers map[string]string) ResponseT {
 	// 准备要发送的表单数据
 	var params = url.Values{}

@@ -10,6 +10,26 @@ import (
 )
 
 // 发起 POST 请求，发送 json 参数
+//
+//	切记！`urlStr` 一定要带 `http://` 或 `http://` 前缀
+//	否则 `client.Do(req)` 会抛出错误 `unsupported protocol scheme ""`
+//
+//	urlStr     string
+//	jsonParams any
+//	headers    map[string]string
+//
+//	return
+//
+//	httpx.ResponseT struct {
+//		Error      error
+//		Body       []byte
+//		StatusCode int
+//		BindJSON   func (obj any) statusCode int, err error // 解析响应，绑定到对象
+//	}
+//
+// e.g.
+//
+//	statusCode, err := httpx.PostJSON(urlStr, jsonParams, headers).BindJSON(&apiResult)
 func PostJSON(urlStr string, jsonParams any, headers map[string]string) ResponseT {
 	// 将数据编码为 JSON 格式
 	jsonData, err := json.Marshal(jsonParams)
