@@ -15,10 +15,10 @@ import (
 //
 // e.g.
 //
-//	statusCode, err := httpx.PostJSON(urlStr, jsonParams, headers).BindJSON(&apiResult)
-func (s ResponseT) BindJSON(obj any) (statusCode int, err error) {
+//	statusCode, body, err := httpx.PostJSON(urlStr, jsonParams, headers).BindJSON(&apiResult)
+func (s ResponseT) BindJSON(obj any) (statusCode int, body string, err error) {
 	if s.Error != nil {
-		return s.StatusCode, s.Error
+		return s.StatusCode, string(s.Body), s.Error
 	}
-	return s.StatusCode, json.Unmarshal(s.Body, obj)
+	return s.StatusCode, string(s.Body), json.Unmarshal(s.Body, obj)
 }
