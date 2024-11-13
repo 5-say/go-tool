@@ -54,12 +54,15 @@ func InitGroup(group, configPath, privateKeyPath string) *SingletonT {
 	s.Config[group] = config
 
 	// 初始化分组数据库连接
-	s.DB[group] = mysqlx.New(config.MysqlDSN, logx.GormLogger(logger.Config{
+	s.DB[group], err = mysqlx.New(config.MysqlDSN, logx.GormLogger(logger.Config{
 		SlowThreshold:             200 * time.Millisecond,
 		IgnoreRecordNotFoundError: false,
 		ParameterizedQueries:      false,
 		LogLevel:                  logger.Warn,
 	}))
+	if err != nil {
+		panic(err)
+	}
 
 	// 初始化数据库结构
 	s.DB[group].AutoMigrate(&model.JwtxToken{})
