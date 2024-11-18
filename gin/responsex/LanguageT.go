@@ -42,10 +42,13 @@ func (s LanguageT) GetFromDB(messageFormat []any) (message string) {
 		}).Error; err != nil {
 			logx.Debug().CallerSkipFrame(4).Err(err)
 		}
+
+		if s.Direct() {
+			return fmt.Sprintf(format, messageFormat[1:]...)
+		}
+
+		return "..."
 	}
 
-	if s.Direct() {
-		return fmt.Sprintf(format, messageFormat[1:]...)
-	}
 	return fmt.Sprintf(language[s.Use].(string), messageFormat[1:]...)
 }
