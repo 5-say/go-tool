@@ -16,13 +16,13 @@ import (
 //	c             *gin.Context
 //	loginGroup    string       登录的 token 分组
 //	loginTerminal string       登录的 终端名称（后续登出时，若引用此处的传值为“all”，则无视配置，强制登出所有终端）
-//	accountID     uint32       登录的 账户 ID
+//	accountID     uint64       登录的 账户 ID
 //
 // e.g.
 //
 //	jwtx.Singleton.Login(c, "admin", "pc", 1)
 //	jwtx.Singleton.Login(c, "admin", "mobile", 1)
-func (s *SingletonT) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint32) (err error) {
+func (s *SingletonT) Login(c *gin.Context, loginGroup string, loginTerminal string, accountID uint64) (err error) {
 	// 获取分组配置
 	var (
 		config     = s.Config[loginGroup]

@@ -12,8 +12,8 @@ const TableNameJwtxToken = "jwtx_tokens"
 
 // JwtxToken jwtx token 信息表
 type JwtxToken struct {
-	ID             uint64    `gorm:"column:id;type:bigint(20) unsigned;primaryKey;autoIncrement:true;comment:token ID" json:"id"`                          // token ID
-	AccountID      uint32    `gorm:"column:account_id;type:int(10) unsigned;not null;index:account_id,priority:1;comment:账户 ID" json:"account_id"`         // 账户 ID
+	ID             uint64    `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:token ID" json:"id"`                              // token ID
+	AccountID      uint64    `gorm:"column:account_id;type:bigint unsigned;not null;index:account_id,priority:1;comment:账户 ID" json:"account_id"`          // 账户 ID
 	LoginGroup     string    `gorm:"column:login_group;type:varchar(255);not null;index:login_group,priority:1;comment:登录的分组" json:"login_group"`          // 登录的分组
 	LoginTerminal  string    `gorm:"column:login_terminal;type:varchar(255);not null;index:login_terminal,priority:1;comment:登录的终端" json:"login_terminal"` // 登录的终端
 	MakeTokenIP    string    `gorm:"column:make_token_ip;type:varchar(50);not null;comment:首次请求生成 token 的 IP 地址" json:"make_token_ip"`                     // 首次请求生成 token 的 IP 地址

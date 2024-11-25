@@ -28,7 +28,7 @@ func newJwtxToken(db *gorm.DB, opts ...gen.DOOption) jwtxToken {
 	tableName := _jwtxToken.jwtxTokenDo.TableName()
 	_jwtxToken.ALL = field.NewAsterisk(tableName)
 	_jwtxToken.ID = field.NewUint64(tableName, "id")
-	_jwtxToken.AccountID = field.NewUint32(tableName, "account_id")
+	_jwtxToken.AccountID = field.NewUint64(tableName, "account_id")
 	_jwtxToken.LoginGroup = field.NewString(tableName, "login_group")
 	_jwtxToken.LoginTerminal = field.NewString(tableName, "login_terminal")
 	_jwtxToken.MakeTokenIP = field.NewString(tableName, "make_token_ip")
@@ -48,7 +48,7 @@ type jwtxToken struct {
 
 	ALL            field.Asterisk
 	ID             field.Uint64 // token ID
-	AccountID      field.Uint32 // 账户 ID
+	AccountID      field.Uint64 // 账户 ID
 	LoginGroup     field.String // 登录的分组
 	LoginTerminal  field.String // 登录的终端
 	MakeTokenIP    field.String // 首次请求生成 token 的 IP 地址
@@ -73,7 +73,7 @@ func (j jwtxToken) As(alias string) *jwtxToken {
 func (j *jwtxToken) updateTableName(table string) *jwtxToken {
 	j.ALL = field.NewAsterisk(table)
 	j.ID = field.NewUint64(table, "id")
-	j.AccountID = field.NewUint32(table, "account_id")
+	j.AccountID = field.NewUint64(table, "account_id")
 	j.LoginGroup = field.NewString(table, "login_group")
 	j.LoginTerminal = field.NewString(table, "login_terminal")
 	j.MakeTokenIP = field.NewString(table, "make_token_ip")

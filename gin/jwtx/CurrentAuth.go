@@ -3,7 +3,7 @@ package jwtx
 import "github.com/gin-gonic/gin"
 
 type Current struct {
-	AccountID     uint32 // 账户 ID
+	AccountID     uint64 // 账户 ID
 	LoginGroup    string // 登录的分组
 	LoginTerminal string // 登录的终端
 	MakeTokenIP   string // 首次请求生成 token 的 IP 地址
@@ -12,9 +12,9 @@ type Current struct {
 // 获取当前登录的账户信息，需配合中间件使用
 func CurrentAuth(c *gin.Context) Current {
 
-	var accountID uint32
+	var accountID uint64
 	if val, ok := c.Get("jwtx.accountID"); ok && val != nil {
-		accountID, _ = val.(uint32)
+		accountID, _ = val.(uint64)
 	}
 
 	return Current{

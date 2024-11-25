@@ -2,7 +2,7 @@ version: "0.1"
 database:
 
   # consult[https://gorm.io/docs/connecting_to_the_database.html]"
-  dsn: "root:root@tcp(mysql:3306)/jwtx?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "root:root@tcp(mysql:3306)/dev_local_platform?charset=utf8mb4&parseTime=True&loc=Local"
 
   # input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
   db: "mysql"
