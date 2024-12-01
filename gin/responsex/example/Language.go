@@ -1,6 +1,8 @@
 package example
 
-import "github.com/5-say/go-tool/gin/responsex"
+import (
+	"github.com/5-say/go-tool/gin/responsex"
+)
 
 var Language = responsex.LanguageT{
 	Direct: func() bool {
@@ -17,4 +19,7 @@ var Language = responsex.LanguageT{
 			"最小提现金额：%v": "Valor mínimo de retirada: %v",
 		},
 	},
+	// Model: func() *gorm.DB {
+	// 	return DB().Model(&model.Language{})
+	// },
 }
