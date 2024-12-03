@@ -35,20 +35,31 @@ func (s LanguageT) GetFromDB(messageFormat []any) (message string) {
 		language map[string]any
 	)
 
+	// 首次捕获，存储数据库
 	s.Model().Where("format = ?", format).Find(&language)
 	if len(language) == 0 {
+		// 写入数据库
 		if err := s.Model().Create(map[string]any{
 			"format": format,
 		}).Error; err != nil {
 			logx.Debug().CallerSkipFrame(4).Err(err)
 		}
 
+		// 判断是否原样输出
 		if s.Direct() {
 			return fmt.Sprintf(format, messageFormat[1:]...)
 		}
 
-		return "..."
+		// 读取 ID 输出为 CODE
+		s.Model().Where("format = ?", format).Find(&language)
+		return fmt.Sprintf("CODE: 53000%v", language["id"].(uint64))
 	}
 
-	return fmt.Sprintf(language[s.Use].(string), messageFormat[1:]...)
+	// 判断数据库里的语言定义是否完整
+	var lanFormat = language[s.Use].(string)
+	if lanFormat == "..." {
+		return fmt.Sprintf("CODE: 53000%v", language["id"].(uint64))
+	}
+
+	return fmt.Sprintf(lanFormat, messageFormat[1:]...)
 }
