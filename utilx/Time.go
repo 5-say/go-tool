@@ -68,3 +68,15 @@ func (s TimeT) LocMonthEndTimestamp(unixTimestamp int64) int64 {
 	}
 	return time.Date(year, month, 1, 0, 0, 0, 0, s.Loc()).Unix() - 1
 }
+
+// 获取目标时间戳所在日，起始时间戳（自动修正时区误差）
+func (s TimeT) ParseDayStartTimestamp(value string) int64 {
+	todayStartTime, _ := time.ParseInLocation("2006-01-02", value, s.Loc())
+	return todayStartTime.Unix()
+}
+
+// 获取目标时间戳所在日，结束时间戳（自动修正时区误差）
+func (s TimeT) ParseDayEndTimestamp(value string) int64 {
+	todayStartTime, _ := time.ParseInLocation("2006-01-02", value, s.Loc())
+	return todayStartTime.Add(24*time.Hour).Unix() - 1
+}
