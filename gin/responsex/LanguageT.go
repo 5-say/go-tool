@@ -9,7 +9,7 @@ import (
 
 type LanguageT struct {
 	Direct func() bool                  // 是否直接输出原始消息
-	Use    string                       // 当前使用的语言名称
+	Use    func() string                // 当前使用的语言名称
 	Map    map[string]map[string]string // 基础语言包定义
 	Model  func() *gorm.DB              // 支持数据库获取语言包
 }
@@ -20,7 +20,7 @@ func (s LanguageT) Get(messageFormat []any) (message string) {
 	if s.Direct() {
 		return fmt.Sprintf(format, messageFormat[1:]...)
 	}
-	message, ok := s.Map[s.Use][format]
+	message, ok := s.Map[s.Use()][format]
 	if !ok {
 		logx.Debug().CallerSkipFrame(4).Msgf(`缺少语言文件 languageName:"%s" key:"%s"`, s.Use, format)
 		return "..."
@@ -56,7 +56,7 @@ func (s LanguageT) GetFromDB(messageFormat []any) (message string) {
 	}
 
 	// 判断数据库里的语言定义是否完整
-	var lanFormat = language[s.Use].(string)
+	var lanFormat = language[s.Use()].(string)
 	if lanFormat == "..." {
 		return fmt.Sprintf("CODE: 53000%v", language["id"].(uint64))
 	}
