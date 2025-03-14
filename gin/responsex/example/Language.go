@@ -8,7 +8,9 @@ var Language = responsex.LanguageT{
 	Direct: func() bool {
 		return false
 	},
-	Use: "pt",
+	Use: func() string {
+		return "pt"
+	},
 	Map: map[string]map[string]string{
 		"pt": {
 			"":          "%s",

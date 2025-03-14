@@ -22,7 +22,7 @@ func (s LanguageT) Get(messageFormat []any) (message string) {
 	}
 	message, ok := s.Map[s.Use()][format]
 	if !ok {
-		logx.Debug().CallerSkipFrame(4).Msgf(`缺少语言文件 languageName:"%s" key:"%s"`, s.Use, format)
+		logx.Debug().CallerSkipFrame(4).Msgf(`缺少语言文件 languageName:"%s" key:"%s"`, s.Use(), format)
 		return "..."
 	}
 	return fmt.Sprintf(message, messageFormat[1:]...)
