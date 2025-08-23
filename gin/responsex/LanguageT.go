@@ -56,8 +56,11 @@ func (s LanguageT) GetFromDB(messageFormat []any) (message string) {
 	}
 
 	// 判断数据库里的语言定义是否完整
-	var lanFormat = language[s.Use()].(string)
-	if lanFormat == "..." {
+	var lanFormat, ok = language[s.Use()].(string)
+	if !ok {
+		logx.Debug().CallerSkipFrame(4).Msgf("s.Use() = %v", s.Use())
+	}
+	if !ok || lanFormat == "..." {
 		return fmt.Sprintf("CODE: 53000%v", language["id"].(uint64))
 	}
 
